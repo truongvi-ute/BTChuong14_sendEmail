@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/BTChuong14_sendEmail">
+  
+  <Resource name="jdbc/murach" 
+            auth="Container"
+            type="javax.sql.DataSource" 
+            driverClassName="org.postgresql.Driver"
+            url="${DB_URL}"
+            username="${DB_USERNAME}" 
+            password="${DB_PASSWORD}"
+            maxTotal="20" 
+            maxIdle="10" 
+            maxWaitMillis="-1"/>
+
+</Context>

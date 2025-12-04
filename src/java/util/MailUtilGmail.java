@@ -8,24 +8,37 @@ public class MailUtilGmail {
 
     public static void sendMail(String to, String from, String subject, String body, boolean bodyIsHTML) throws MessagingException {
         
+        // Lấy thông tin từ biến môi trường (cho Render)
+        String gmailEmail = System.getenv("GMAIL_EMAIL");
+        String gmailPassword = System.getenv("GMAIL_APP_PASSWORD");
+        
+        // Fallback cho môi trường local (nếu không có env variables)
+        if (gmailEmail == null || gmailEmail.isEmpty()) {
+            gmailEmail = "nguyendoantruongvi11@gmail.com";
+        }
+        if (gmailPassword == null || gmailPassword.isEmpty()) {
+            gmailPassword = "khgn pvmm ldma bnbu";
+        }
+        
         // 1 - get a mail session
         Properties props = new Properties();
         props.put("mail.transport.protocol", "smtp"); 
-
         props.put("mail.smtp.host", "smtp.gmail.com");
-
-        // QUAN TRỌNG: Đổi port 465 -> 587
+        
+        // Port 587 với STARTTLS - tương thích tốt hơn với Render
         props.put("mail.smtp.port", 587); 
-
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.quitwait", "false");
-
-        // QUAN TRỌNG: Bắt buộc bật STARTTLS cho port 587
+        
+        // Bật STARTTLS cho port 587
         props.put("mail.smtp.starttls.enable", "true"); 
-
-        // Vẫn giữ dòng này để tránh lỗi SSL Handshake như lúc nãy
+        props.put("mail.smtp.starttls.required", "true");
+        
+        // SSL protocols
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        Session session = Session.getDefaultInstance(props);
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        
+        Session session = Session.getInstance(props);
         session.setDebug(true);
 
         // 2 - create a message
@@ -46,8 +59,7 @@ public class MailUtilGmail {
 
         // 4 - send the message
         Transport transport = session.getTransport();
-        // Lưu ý: Thay thế email và password thực tế của bạn ở dưới
-        transport.connect("nguyendoantruongvi11@gmail.com", "khgn pvmm ldma bnbu"); 
+        transport.connect(gmailEmail, gmailPassword); 
         transport.sendMessage(message, message.getAllRecipients());
         transport.close();
     }
