@@ -17,7 +17,7 @@ public class MailUtilGmail {
             gmailEmail = "nguyendoantruongvi11@gmail.com";
         }
         if (gmailPassword == null || gmailPassword.isEmpty()) {
-            gmailPassword = "khgn pvmm ldma bnbu";
+            gmailPassword = "khgnpvmmldmabnbu";
         }
         
         // 1 - get a mail session
