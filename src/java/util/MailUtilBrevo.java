@@ -14,6 +14,7 @@ public class MailUtilBrevo {
     
     // Lấy API Key từ biến môi trường (Cấu hình trên Render)
     // Nếu chạy local mà biến này null, bạn có thể điền tạm key vào để test (nhưng nhớ xóa khi push git)
+
     private static final String API_KEY = System.getenv("BREVO_API_KEY"); 
     // Email người gửi (Phải trùng với email bạn dùng đăng ký Brevo)
     private static final String SENDER_EMAIL = "nguyendoantruongvi11@gmail.com"; 

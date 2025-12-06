@@ -16,6 +16,11 @@
     
     <p><i>${message}</i></p>
     
+    <%-- Hiển thị thông báo lỗi nếu có --%>
+    <% if (request.getAttribute("errorMessage") != null) { %>
+        <p style="color: red; font-weight: bold;">${errorMessage}</p>
+    <% } %>
+    
     <form action="emailList" method="post">
         <input type="hidden" name="action" value="add">
         

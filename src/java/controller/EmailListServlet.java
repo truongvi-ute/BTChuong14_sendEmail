@@ -120,30 +120,35 @@ public class EmailListServlet extends HttpServlet {
             String lastName = request.getParameter("lastName");
             String email = request.getParameter("email");
 
-            // 2. Lưu vào Database
-            User user = new User(firstName, lastName, email);
-            UserDB.insert(user);
-            request.setAttribute("user", user);
+            // 2. Kiểm tra email đã tồn tại chưa
+            if (UserDB.emailExists(email)) {
+                // Email đã tồn tại, hiển thị thông báo lỗi
+                String errorMessage = "Email này đã được đăng ký. Vui lòng sử dụng email khác.";
+                request.setAttribute("errorMessage", errorMessage);
+                url = "/index.jsp";
+            } else {
+                // 3. Email chưa tồn tại, lưu vào Database
+                User user = new User(firstName, lastName, email);
+                UserDB.insert(user);
+                request.setAttribute("user", user);
 
-            // 3. Chuẩn bị nội dung Email (Dùng HTML thay vì text thường)
-            // Lưu ý: Không cần biến "from" ở đây nữa vì đã cấu hình trong MailUtilBrevo
-            String subject = "Welcome to our email list";
-            
-            // Dùng thẻ <br> để xuống dòng, thẻ <i>, <b> để trang trí
-            String body = "<h3>Dear " + firstName + ",</h3>" +
-                          "<p>Thanks for joining our email list. We'll make sure to send " +
-                          "you announcements about new products and promotions.</p>" +
-                          "<p>Have a great day and thanks again!</p>" +
-                          "<br>" +
-                          "<i>Kelly Slivkoff</i><br>" +
-                          "<b>Mike Murach & Associates</b>";
-            
-            // 4. Gửi email qua Brevo API
-            // Class MailUtilBrevo đã tự xử lý try-catch bên trong nên code ở đây rất gọn
-            MailUtilBrevo.sendEmail(email, subject, body);
-            
-            // Chuyển hướng đến trang cảm ơn
-            url = "/thanks.jsp";
+                // 4. Chuẩn bị nội dung Email (Dùng HTML thay vì text thường)
+                String subject = "Welcome to our email list";
+                
+                String body = "<h3>Dear " + firstName + ",</h3>" +
+                              "<p>Thanks for joining our email list. We'll make sure to send " +
+                              "you announcements about new products and promotions.</p>" +
+                              "<p>Have a great day and thanks again!</p>" +
+                              "<br>" +
+                              "<i>Kelly Slivkoff</i><br>" +
+                              "<b>Mike Murach & Associates</b>";
+                
+                // 5. Gửi email qua Brevo API
+                MailUtilBrevo.sendEmail(email, subject, body);
+                
+                // Chuyển hướng đến trang cảm ơn
+                url = "/thanks.jsp";
+            }
         }
         
         getServletContext()
